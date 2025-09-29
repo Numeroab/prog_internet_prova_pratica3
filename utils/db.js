@@ -1,103 +1,126 @@
-const { usuariosCollection: usuariosCollection, addDoc, getDocs, getDoc, updateDoc, deleteDoc, doc } = require(
-    //'./firebase-config'
-);
+const fs = require('fs').promises;
+const path = require('path');
+const { v4: uuidv4 } = require('uuid'); // CORREÇÃO: import correto
+
+const DB_PATH = path.join(__dirname, '..', 'db.json');
 
 const database = {
-
-  getAll: async () => {
+  readDB: async () => {
     try {
-      const querySnapshot = await getDocs(usuariosCollection);
-      const usuarios = [];
-      
-      querySnapshot.forEach((doc) => {
-        usuarios.push({
-          id: doc.id,
-          ...doc.data()
-        });
-      });
-      
-      return usuarios;
+      const data = await fs.readFile(DB_PATH, 'utf-8');
+      return JSON.parse(data);
     } catch (error) {
-      console.error('Erro ao buscar usuários:', error);
-      throw new Error('Falha ao buscar usuários');
+      return { users: [] };
     }
   },
-  
 
-  getById: async (id) => {
+  saveDB: async (data) => {
     try {
-      const docRef = doc(usuariosCollection, id);
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        return {
-          id: docSnap.id,
-          ...docSnap.data()
-        };
-      } else {
-        return null;
-      }
+      await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2));
     } catch (error) {
-      console.error('Erro ao buscar usuário:', error);
-      throw new Error('Falha ao buscar usuário');
+      throw new Error('Erro ao salvar dados no arquivo');
     }
   },
-  
 
   create: async (usuarioData) => {
     try {
-      // Adicionar timestamps
-      const usuarioComTimestamps = {
+      const db = await database.readDB();
+      
+      // Verificar se usuário já existe
+      const usuarioExistente = db.users.find(user => user.email === usuarioData.email);
+      if (usuarioExistente) {
+        throw new Error('Usuário já existe');
+      }
+      
+      // CORREÇÃO: Usar uuidv4() corretamente
+      const novoUsuario = {
+        id: uuidv4(),
         ...usuarioData,
         dataCriacao: new Date().toISOString(),
         dataAtualizacao: new Date().toISOString()
       };
       
-      const docRef = await addDoc(usuariosCollection, usuarioComTimestamps);
+      db.users.push(novoUsuario);
+      await database.saveDB(db);
       
-      return {
-        id: docRef.id,
-        ...usuarioComTimestamps
-      };
+      return novoUsuario;
     } catch (error) {
       console.error('Erro ao criar usuário:', error);
-      throw new Error('Falha ao criar usuário');
+      throw new Error('Falha ao criar usuário: ' + error.message);
     }
   },
-  
+
+  getAll: async () => {
+    try {
+      const db = await database.readDB();
+      return db.users;
+    } catch (error) {
+      console.error('Erro ao buscar usuários:', error);
+      throw new Error('Falha ao buscar usuários');
+    }
+  },
+
+  getById: async (id) => {
+    try {
+      const db = await database.readDB();
+      const usuario = db.users.find(user => user.id === id);
+      return usuario || null;
+    } catch (error) {
+      console.error('Erro ao buscar usuário:', error);
+      throw new Error('Falha ao buscar usuário');
+    }
+  },
+
+  getByEmail: async (email) => {
+    try {
+      const db = await database.readDB();
+      const usuario = db.users.find(user => user.email === email);
+      return usuario || null;
+    } catch (error) {
+      console.error('Erro ao buscar usuário por email:', error);
+      throw new Error('Falha ao buscar usuário');
+    }
+  },
 
   update: async (id, usuarioData) => {
     try {
-      const docRef = doc(usuariosCollection, id);
+      const db = await database.readDB();
+      const usuarioIndex = db.users.findIndex(user => user.id === id);
+      
+      if (usuarioIndex === -1) {
+        throw new Error('Usuário não encontrado');
+      }
+      
       const usuarioAtualizado = {
+        ...db.users[usuarioIndex],
         ...usuarioData,
         dataAtualizacao: new Date().toISOString()
       };
       
-      await updateDoc(docRef, usuarioAtualizado);
+      db.users[usuarioIndex] = usuarioAtualizado;
+      await database.saveDB(db);
       
-      return {
-        id: id,
-        ...usuarioAtualizado
-      };
+      return usuarioAtualizado;
     } catch (error) {
       console.error('Erro ao atualizar usuário:', error);
-      throw new Error('Falha ao atualizar usuário');
+      throw new Error('Falha ao atualizar usuário: ' + error.message);
     }
   },
-  
 
   delete: async (id) => {
     try {
-      const docRef = doc(usuariosCollection, id);
-      const usuario = await database.getById(id);
+      const db = await database.readDB();
+      const usuarioIndex = db.users.findIndex(user => user.id === id);
       
-      if (usuario) {
-        await deleteDoc(docRef);
-        return usuario;
-      } else {
+      if (usuarioIndex === -1) {
         return null;
       }
+      
+      const usuarioDeletado = db.users[usuarioIndex];
+      db.users.splice(usuarioIndex, 1);
+      await database.saveDB(db);
+      
+      return usuarioDeletado;
     } catch (error) {
       console.error('Erro ao deletar usuário:', error);
       throw new Error('Falha ao deletar usuário');

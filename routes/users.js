@@ -1,15 +1,17 @@
-import {registrerUser, loginUser, getTodosDados, getDadoPorId, atualizaDado, deletaDado} from "../controllers/usersController.js"
-import { authenticateToken } from '../middleware/auth.js';
-import express from 'express';
-
-
+const express = require('express');
 const router = express.Router();
+const authenticateToken = require('../middleware/auth');
+const {
+    getAllUsers,
+    getUserById,
+    updateUser,
+    deleteUser
+} = require('../controllers/usersController');
 
-router.post('/register', registrerUser);
-router.post('/login', loginUser);
-router.get('/users', authenticateToken, getTodosDados);
-router.get('/users/:id', authenticateToken, getDadoPorId);
-router.put('/users/:id', authenticateToken, atualizaDado);
-router.delete('/users/:id', authenticateToken, deletaDado);
+// Todas as rotas protegidas por JWT
+router.get('/', authenticateToken, getAllUsers);
+router.get('/:id', authenticateToken, getUserById);
+router.put('/:id', authenticateToken, updateUser);
+router.delete('/:id', authenticateToken, deleteUser);
 
-export { router };
+module.exports = router;

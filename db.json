@@ -1,0 +1,20 @@
+{
+  "users": [
+    {
+      "id": "a760716e-35ed-4079-ae68-b78bc9d4d44d",
+      "nome": "João Silva",
+      "email": "joao@email.com",
+      "password": "$2a$10$mop23DHn8QKZtnKcCcIZIuJX.ETRIj5l3qsV9KSLogmlqWOCDZ9Le",
+      "dataCriacao": "2025-09-29T14:23:04.547Z",
+      "dataAtualizacao": "2025-09-29T14:23:04.547Z"
+    },
+    {
+      "id": "037de510-ec38-405d-a115-cdb150a97ef4",
+      "nome": "João Silva Atualizado",
+      "email": "joao.novo@email.com",
+      "password": "$2a$10$zfIDWozQzuj4eHhgOWGMd.tw0QJReO5/tl.NsHmSW0flQmYATMHwG",
+      "dataCriacao": "2025-09-29T14:30:09.978Z",
+      "dataAtualizacao": "2025-09-29T14:36:57.833Z"
+    }
+  ]
+}

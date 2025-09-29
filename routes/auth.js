@@ -1,9 +1,8 @@
-// const token = localStorage.getItem('jwtToken');
-// fetch('/api/protected-resource', {
-//   headers: {
-//     'Authorization': `Bearer ${token}`
-//   }
-// })
-// .then(response => response.json())
-// .then(data => console.log(data))
-// .catch(error => console.error('Error:', error));
+const express = require('express');
+const router = express.Router();
+const { register, login } = require('../controllers/authController');
+
+router.post('/register', register);
+router.post('/login', login);
+
+module.exports = router;
