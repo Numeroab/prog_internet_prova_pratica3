@@ -1,0 +1,11 @@
+http://localhost:3000/auth/register
+{
+  "nome": "João Silva",
+  "email": "joao@email.com",
+  "senha": "123456"
+}
+
+http://localhost:3000/users
+
+
+

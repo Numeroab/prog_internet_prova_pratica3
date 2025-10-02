@@ -3,10 +3,10 @@
     {
       "id": "a760716e-35ed-4079-ae68-b78bc9d4d44d",
       "nome": "João Silva",
-      "email": "joao@email.com",
+      "email": "joaooriginal@email.com",
       "password": "$2a$10$mop23DHn8QKZtnKcCcIZIuJX.ETRIj5l3qsV9KSLogmlqWOCDZ9Le",
       "dataCriacao": "2025-09-29T14:23:04.547Z",
-      "dataAtualizacao": "2025-09-29T14:23:04.547Z"
+      "dataAtualizacao": "2025-10-02T12:22:09.630Z"
     },
     {
       "id": "037de510-ec38-405d-a115-cdb150a97ef4",
@@ -15,6 +15,14 @@
       "password": "$2a$10$zfIDWozQzuj4eHhgOWGMd.tw0QJReO5/tl.NsHmSW0flQmYATMHwG",
       "dataCriacao": "2025-09-29T14:30:09.978Z",
       "dataAtualizacao": "2025-09-29T14:36:57.833Z"
+    },
+    {
+      "id": "b3929565-17a3-4242-8c5d-8406c1b67b66",
+      "nome": "Amanhecer Salgado",
+      "email": "amanhecer@email.com",
+      "password": "$2a$10$/bNVoP5506YY7d7ny1SLxevo2RxiHf0W.JGUhBWpDldNEgCEitSrG",
+      "dataCriacao": "2025-10-02T12:09:51.783Z",
+      "dataAtualizacao": "2025-10-02T12:09:51.783Z"
     }
   ]
 }
